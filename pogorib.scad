@@ -2,7 +2,7 @@ MM_PER_IN = 25.4;
 RESOLUTION = 0.01; // 0.01 mm slices (too small to matter)
 PRINT_TOLERANCE = 0.15; // mm
 
-RIB_WIDTH = MM_PER_IN / 4; // 1/4" in mm
+RIB_WIDTH = MM_PER_IN / 2; // 1/4" in mm
 RM2_LENGTH = 246; // mm
 RM2_THICKNESS = 4.7 + PRINT_TOLERANCE; // mm
 RM2_CURVE_RAD = 4.25; // mm
@@ -41,11 +41,45 @@ module genInverseCurveShape(
   }
 }
 
+
+pogoPinL = 13.25;
+pogoPinH = 2.78;
+pogoPinW = RIB_WIDTH;
+pinsH = 1.6;
+pinsStickout = 1.5;
+bridgeCompensation = .2;
+module Pogo8212200510001101Slot(){
+    translate([pinsStickout,0,((pogoPinH+bridgeCompensation)/2)-pinsH/2])
+    cube([pogoPinW,pogoPinL,pinsH]);
+    cube([pogoPinW,pogoPinL,pogoPinH+bridgeCompensation]);
+}
+
+magnetL = 13.5;
+magnetD = 3.22;
+magnetTol = .2;
+$fs = RESOLUTION;
+module magnetHole(){ //TODO: make this not centered (magnets not centered up/down)
+    rotate([0,90,0])
+    translate([.25,0,-magnetL+RIB_WIDTH-.725]) // -.7** makes them not go all the way through
+    cylinder(d=magnetD+magnetTol, h=magnetL);
+}
+
+INTERMAGNET_DIST = 16.3;
+module magnetHoles(bottomLoc){
+    // translation of bottom one (closest to USB-C cable)
+    translate([0,bottomLoc,0])
+    magnetHole();
+    // location of top one is fixed
+    topLoc = bottomLoc + INTERMAGNET_DIST;
+    translate([0,topLoc,0])
+    magnetHole();
+}
+
 echo(str("Rib width in mm: ", RIB_WIDTH));
 
 difference(){
   hull(){
-    genCurveShape();
+    #genCurveShape();
 
     translate([0, RM2_LENGTH, 0])
     genCurveShape();
@@ -64,6 +98,31 @@ difference(){
     translate([0, RM2_LENGTH, 0])
     genCurveShape();
   }
+  
+  PINNY_STICKOUTY = .4;
+  distanceFromUSBside = 12.9;
+  translate([-pogoPinW-pinsStickout-PINNY_STICKOUTY+RIB_WIDTH,distanceFromUSBside,-pogoPinH/2])
+  #Pogo8212200510001101Slot();
+
+  magnetHoles(34.43);
+  magnetHoles(RM2_LENGTH-16.47-INTERMAGNET_DIST);
+
+  // extra holes test
+  translate([0,(34.43 + (INTERMAGNET_DIST / 3)),0])
+  magnetHole();
+  translate([0,(34.43 + (INTERMAGNET_DIST * (2/3) )),0])
+  magnetHole();
+
+  // TESTING PIECES
+  // Cut in half
+  translate([-10,60,-10])
+  cube([30,530,30]);
 }
 
+// add stops
+translate([30/2,-RIB_WIDTH/2,0])
+cube([30,RIB_WIDTH,RM2_THICKNESS], center = true);
+
+//translate([30/2,(-RIB_WIDTH/2)+RM2_LENGTH+RIB_WIDTH,0])
+//cube([30,RIB_WIDTH,RM2_THICKNESS], center = true);
 
