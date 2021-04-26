@@ -101,8 +101,8 @@ difference(){
   
   PINNY_STICKOUTY = .4;
   distanceFromUSBside = 12.9;
-  translate([-pogoPinW-pinsStickout-PINNY_STICKOUTY+RIB_WIDTH,distanceFromUSBside,-pogoPinH/2])
-  #Pogo8212200510001101Slot();
+  translate([-pogoPinW-pinsStickout+PINNY_STICKOUTY+RIB_WIDTH,distanceFromUSBside,-pogoPinH/2])
+  Pogo8212200510001101Slot();
 
   magnetHoles(34.43);
   magnetHoles(RM2_LENGTH-16.47-INTERMAGNET_DIST);
