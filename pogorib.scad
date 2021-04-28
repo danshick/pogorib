@@ -100,7 +100,7 @@ difference(){
   }
   
   PINNY_STICKOUTY = .4;
-  distanceFromUSBside = 12.9;
+  distanceFromUSBside = 12.3;
   translate([-pogoPinW-pinsStickout+PINNY_STICKOUTY+RIB_WIDTH,distanceFromUSBside,-pogoPinH/2])
   Pogo8212200510001101Slot();
 
