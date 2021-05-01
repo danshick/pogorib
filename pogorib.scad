@@ -2,7 +2,7 @@ MM_PER_IN = 25.4;
 RESOLUTION = 0.01; // 0.01 mm slices (too small to matter)
 PRINT_TOLERANCE = 0.15; // mm
 
-RIB_WIDTH = MM_PER_IN / 2; // 1/4" in mm
+RIB_WIDTH = MM_PER_IN / 2; // 1/2" in mm
 RM2_LENGTH = 246; // mm
 RM2_THICKNESS = 4.7 + PRINT_TOLERANCE; // mm
 RM2_CURVE_RAD = 4.25; // mm
@@ -20,7 +20,7 @@ module genCurveShape(
   translate([radius - (width), 0, -thickness / 2])
   linear_extrude(thickness)
   intersection() {
-    circle(r=radius, $fn = 128, center = true);
+    #circle(r=radius, $fn = 128, center = true);
     translate([-radius + width / 2, 0, 0])
       square(size = [width, height], center = true);
   }
@@ -61,7 +61,7 @@ $fs = RESOLUTION;
 module magnetHole(){
     rotate([0,90,0])
     translate([.25,0,-magnetL+RIB_WIDTH-.725]) // -.7** makes them not go all the way through
-    cylinder(d=magnetD+magnetTol, h=magnetL);
+    #cylinder(d=magnetD+magnetTol, h=magnetL);
 }
 
 INTERMAGNET_DIST = 16.3 / 3;
