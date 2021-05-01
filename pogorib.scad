@@ -58,20 +58,22 @@ magnetL = 13.5;
 magnetD = 3.22;
 magnetTol = .2;
 $fs = RESOLUTION;
-module magnetHole(){ //TODO: make this not centered (magnets not centered up/down)
+module magnetHole(){
     rotate([0,90,0])
     translate([.25,0,-magnetL+RIB_WIDTH-.725]) // -.7** makes them not go all the way through
     cylinder(d=magnetD+magnetTol, h=magnetL);
 }
 
-INTERMAGNET_DIST = 16.3;
+INTERMAGNET_DIST = 16.3 / 3;
 module magnetHoles(bottomLoc){
     // translation of bottom one (closest to USB-C cable)
-    translate([0,bottomLoc,0])
+    translate([0,bottomLoc + (INTERMAGNET_DIST * 0),0])
     magnetHole();
-    // location of top one is fixed
-    topLoc = bottomLoc + INTERMAGNET_DIST;
-    translate([0,topLoc,0])
+    translate([0,bottomLoc + (INTERMAGNET_DIST * 1),0])
+    magnetHole();
+    translate([0,bottomLoc + (INTERMAGNET_DIST * 2),0])
+    magnetHole();
+    translate([0,bottomLoc + (INTERMAGNET_DIST * 3),0])
     magnetHole();
 }
 
@@ -106,12 +108,6 @@ difference(){
 
   magnetHoles(34.43);
   magnetHoles(RM2_LENGTH-16.47-INTERMAGNET_DIST);
-
-  // extra holes test
-  translate([0,(34.43 + (INTERMAGNET_DIST / 3)),0])
-  magnetHole();
-  translate([0,(34.43 + (INTERMAGNET_DIST * (2/3) )),0])
-  magnetHole();
 
   // TESTING PIECES
   // Cut in half
